@@ -8,9 +8,9 @@ import (
 	"text/tabwriter"
 	"text/template"
 
+	"github.com/Mars-2dot/promptui/list"
+	"github.com/Mars-2dot/promptui/screenbuf"
 	"github.com/chzyer/readline"
-	"github.com/manifoldco/promptui/list"
-	"github.com/manifoldco/promptui/screenbuf"
 )
 
 // SelectedAdd is used internally inside SelectWithAdd when the add option is selected in select mode.
@@ -116,24 +116,27 @@ type Key struct {
 // text/template syntax. Custom state, colors and background color are available for use inside
 // the templates and are documented inside the Variable section of the docs.
 //
-// Examples
+// # Examples
 //
 // text/templates use a special notation to display programmable content. Using the double bracket notation,
 // the value can be printed with specific helper functions. For example
 //
 // This displays the value given to the template as pure, unstylized text. Structs are transformed to string
 // with this notation.
-// 	'{{ . }}'
+//
+//	'{{ . }}'
 //
 // This displays the name property of the value colored in cyan
-// 	'{{ .Name | cyan }}'
+//
+//	'{{ .Name | cyan }}'
 //
 // This displays the label property of value colored in red with a cyan background-color
-// 	'{{ .Label | red | cyan }}'
+//
+//	'{{ .Label | red | cyan }}'
 //
 // See the doc of text/template for more info: https://golang.org/pkg/text/template/
 //
-// Notes
+// # Notes
 //
 // Setting any of these templates will remove the icons from the default templates. They must
 // be added back in each of their specific templates. The styles.go constants contains the default icons.
@@ -304,7 +307,10 @@ func (s *Select) innerRun(cursorPos, scroll int, top rune) (int, string, error) 
 		}
 
 		label := render(s.Templates.label, s.Label)
-		sb.Write(label)
+		labelLines := bytes.Split(label, []byte("\n"))
+		for _, line := range labelLines {
+			sb.Write(line)
+		}
 
 		items, idx := s.list.Items()
 		last := len(items) - 1
