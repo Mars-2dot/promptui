@@ -304,7 +304,10 @@ func (s *Select) innerRun(cursorPos, scroll int, top rune) (int, string, error) 
 		}
 
 		label := render(s.Templates.label, s.Label)
-		sb.Write(label)
+		labelLines := bytes.Split(label, []byte("\n"))
+		for _, line := range labelLines {
+			sb.Write(line)
+		}
 
 		items, idx := s.list.Items()
 		last := len(items) - 1
